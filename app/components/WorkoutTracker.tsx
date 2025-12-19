@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import workoutPlan from '@/lib/workoutData';
 import type { WorkoutDay } from '@/lib/workoutData';
 
@@ -151,15 +151,12 @@ export default function WorkoutTracker() {
       {/* Header with Menu Button */}
       <div className={`bg-gradient-to-r ${getTypeColor(currentDay.type)} text-white sticky top-0 z-20 shadow-lg`}>
         <div className="max-w-2xl mx-auto px-4 py-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="text-sm font-semibold opacity-90">ACL Holiday Physio</div>
+          <div className="flex items-start justify-end mb-4">
             <button
               onClick={() => setShowMenu(!showMenu)}
               className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-all"
             >
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm0 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2zm0 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2z" />
-              </svg>
+              <CalendarIcon className="w-6 h-6" />
             </button>
           </div>
 
@@ -189,20 +186,17 @@ export default function WorkoutTracker() {
                 className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
               >
                 <div className="relative flex h-full flex-col overflow-y-auto bg-white shadow-xl">
-                  {/* Header */}
-                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-6 sm:px-6">
-                    <div className="flex items-center justify-between">
-                      <DialogTitle className="text-base font-semibold text-white">Menu</DialogTitle>
-                      <button
-                        type="button"
-                        onClick={() => setShowMenu(false)}
-                        className="relative rounded-md text-blue-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                      >
-                        <span className="absolute -inset-2.5" />
-                        <span className="sr-only">Close panel</span>
-                        <XMarkIcon aria-hidden="true" className="size-6" />
-                      </button>
-                    </div>
+                  {/* Close Button */}
+                  <div className="flex justify-end p-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowMenu(false)}
+                      className="relative rounded-md text-slate-400 hover:text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+                    >
+                      <span className="absolute -inset-2.5" />
+                      <span className="sr-only">Close panel</span>
+                      <XMarkIcon aria-hidden="true" className="size-6" />
+                    </button>
                   </div>
 
                   {/* Content */}
@@ -236,18 +230,22 @@ export default function WorkoutTracker() {
                           );
                           
                           let bgColor = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
-                          if (isSelected) {
-                            bgColor = 'bg-blue-500 text-white shadow-md ring-2 ring-blue-300';
-                          } else if (allExercisesChecked) {
+                          let borderStyle = '';
+                          
+                          if (allExercisesChecked) {
                             bgColor = 'bg-green-500 text-white shadow-md';
                           } else if (day.type === 'full') {
                             bgColor = 'bg-blue-100 text-blue-900 hover:bg-blue-200';
                           } else if (day.type === 'light') {
-                            bgColor = 'bg-green-100 text-green-900 hover:bg-green-200';
+                            bgColor = 'bg-blue-50 text-blue-800 hover:bg-blue-100';
                           } else if (day.type === 'rest') {
-                            bgColor = 'bg-slate-300 text-slate-700 hover:bg-slate-400';
+                            bgColor = 'bg-white text-slate-400 border-2 border-slate-200 hover:bg-slate-50';
                           } else if (day.type === 'optional') {
                             bgColor = 'bg-amber-100 text-amber-900 hover:bg-amber-200';
+                          }
+                          
+                          if (isSelected) {
+                            borderStyle = 'ring-2 ring-blue-500 ring-offset-2 shadow-lg';
                           }
                           
                           return (
@@ -257,7 +255,7 @@ export default function WorkoutTracker() {
                                 setSelectedDate(day.date);
                                 setShowMenu(false);
                               }}
-                              className={`p-2 rounded font-semibold transition-all text-xs ${bgColor}`}
+                              className={`p-2 rounded font-semibold transition-all text-xs ${bgColor} ${borderStyle}`}
                               title={day.day}
                             >
                               {dayNum}
@@ -271,15 +269,19 @@ export default function WorkoutTracker() {
                         <p className="font-semibold text-slate-900 mb-2">Legend</p>
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded bg-slate-100 border-2 border-blue-500 ring-2 ring-blue-500 ring-offset-1" />
+                            <span>Selected Day</span>
+                          </div>
+                          <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded bg-blue-100 border border-blue-300" />
                             <span>Full Workout</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded bg-green-100 border border-green-300" />
+                            <div className="w-3 h-3 rounded bg-blue-50 border border-blue-300" />
                             <span>Light Workout</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded bg-slate-300" />
+                            <div className="w-3 h-3 rounded bg-white border border-slate-300" />
                             <span>Rest Day</span>
                           </div>
                           <div className="flex items-center gap-2">
