@@ -66,7 +66,7 @@ export default function InstallPrompt() {
     localStorage.setItem(INSTALL_PROMPT_DISMISSED_KEY, 'true');
   };
 
-  if (!showPrompt && !isIOS) {
+  if (!showPrompt) {
     return null;
   }
 
