@@ -30,6 +30,7 @@ export default function WorkoutTracker() {
   const [completedDays, setCompletedDays] = useState(0);
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [timerDuration, setTimerDuration] = useState(30);
 
   // Initialize on mount
   useEffect(() => {
@@ -126,13 +127,19 @@ export default function WorkoutTracker() {
   };
 
   const handleStartTimer = () => {
-    setTimerSeconds(TIMER_DURATION);
+    setTimerSeconds(timerDuration);
     setTimerActive(true);
   };
 
   const handleStopTimer = () => {
     setTimerActive(false);
     setTimerSeconds(0);
+  };
+
+  const handleTimerDurationSelect = (duration: number) => {
+    setTimerDuration(duration);
+    setTimerSeconds(duration);
+    setTimerActive(true);
   };
 
   const handleFabClick = () => {
@@ -185,7 +192,7 @@ export default function WorkoutTracker() {
         completionPercent={completionPercent}
         timerActive={timerActive}
         timerSeconds={timerSeconds}
-        timerDuration={TIMER_DURATION}
+        timerDuration={timerDuration}
         formatTime={formatTime}
         onMenuClick={() => setShowMenu(true)}
         getTypeColor={getTypeColor}
@@ -261,6 +268,7 @@ export default function WorkoutTracker() {
       <Navigation
         isTimerActive={timerActive}
         onTimerClick={handleFabClick}
+        onTimerDurationSelect={handleTimerDurationSelect}
       />
     </div>
   );
