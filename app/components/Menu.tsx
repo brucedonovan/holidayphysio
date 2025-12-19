@@ -16,8 +16,6 @@ export function Menu({
   checkedExercises,
   onDateChange,
 }: MenuProps) {
-  const [showWarning, setShowWarning] = useState(false);
-
   return (
     <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 space-y-4">
       {/* Overall Progress */}
@@ -118,27 +116,6 @@ export function Menu({
               <span>Completed</span>
             </div>
           </div>
-        </div>
-
-        {/* Safety Notes */}
-        <div className="mt-auto border-t border-slate-200 pt-4">
-          <button
-            onClick={() => setShowWarning(!showWarning)}
-            className="w-full text-left px-3 py-2 rounded hover:bg-slate-100 transition-colors font-semibold text-sm text-red-700 flex items-center justify-between"
-          >
-            ⚠️ Safety Notes {showWarning ? '▼' : '▶'}
-          </button>
-
-          {showWarning && (
-            <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <ul className="text-sm text-red-800 space-y-2">
-                <li>• No swelling the following day = appropriate load</li>
-                <li>• Mild stiffness is normal</li>
-                <li>• Stop if instability, sharp pain, or catching occurs</li>
-                <li>• Consistency matters more than perfection</li>
-              </ul>
-            </div>
-          )}
         </div>
       </div>
     </div>
