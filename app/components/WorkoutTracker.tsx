@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import workoutPlan from '@/lib/workoutData';
 import type { WorkoutDay } from '@/lib/workoutData';
 
@@ -9,6 +11,10 @@ export default function WorkoutTracker() {
   const [checkedExercises, setCheckedExercises] = useState<Set<string>>(new Set());
   const [currentDay, setCurrentDay] = useState<WorkoutDay | null>(null);
   const [completionPercent, setCompletionPercent] = useState(0);
+  const [showMenu, setShowMenu] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [overallProgress, setOverallProgress] = useState(0);
+  const [completedDays, setCompletedDays] = useState(0);
 
   // Initialize on mount
   useEffect(() => {
@@ -26,6 +32,29 @@ export default function WorkoutTracker() {
       }
     }
   }, []);
+
+  // Calculate overall progress
+  useEffect(() => {
+    let totalExercises = 0;
+    let totalChecked = 0;
+    let daysCompleted = 0;
+
+    workoutPlan.forEach((day) => {
+      const filtered = day.exercises.filter((e) => !e.notes || e.notes !== 'Guidance');
+      totalExercises += filtered.length;
+      const dayChecked = filtered.filter((e) => checkedExercises.has(e.id)).length;
+      totalChecked += dayChecked;
+      
+      // Mark day as completed if all exercises are checked
+      if (filtered.length > 0 && dayChecked === filtered.length) {
+        daysCompleted++;
+      }
+    });
+
+    const percent = totalExercises > 0 ? Math.round((totalChecked / totalExercises) * 100) : 0;
+    setOverallProgress(percent);
+    setCompletedDays(daysCompleted);
+  }, [checkedExercises]);
 
   // Update current day and completion percent when selected date changes
   useEffect(() => {
@@ -119,10 +148,21 @@ export default function WorkoutTracker() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-20">
-      {/* Header */}
-      <div className={`bg-gradient-to-r ${getTypeColor(currentDay.type)} text-white sticky top-0 z-10 shadow-lg`}>
+      {/* Header with Menu Button */}
+      <div className={`bg-gradient-to-r ${getTypeColor(currentDay.type)} text-white sticky top-0 z-20 shadow-lg`}>
         <div className="max-w-2xl mx-auto px-4 py-6">
-          <div className="text-sm font-semibold opacity-90 mb-1">ACL Holiday Physio</div>
+          <div className="flex items-start justify-between mb-4">
+            <div className="text-sm font-semibold opacity-90">ACL Holiday Physio</div>
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-all"
+            >
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm0 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2zm0 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2z" />
+              </svg>
+            </button>
+          </div>
+
           <h1 className="text-3xl font-bold">{currentDay.day}</h1>
           <div className="flex items-center justify-between mt-3">
             <div>
@@ -131,11 +171,156 @@ export default function WorkoutTracker() {
             </div>
             <div className="text-right">
               <div className="text-3xl font-bold">{completionPercent}%</div>
-              <p className="text-xs opacity-90">Complete</p>
+              <p className="text-xs opacity-90">Today</p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Drawer Menu */}
+      <Dialog open={showMenu} onClose={setShowMenu} className="relative z-50">
+        <div className="fixed inset-0" />
+        
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
+              <DialogPanel
+                transition
+                className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
+              >
+                <div className="relative flex h-full flex-col overflow-y-auto bg-white shadow-xl">
+                  {/* Header */}
+                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-6 sm:px-6">
+                    <div className="flex items-center justify-between">
+                      <DialogTitle className="text-base font-semibold text-white">Menu</DialogTitle>
+                      <button
+                        type="button"
+                        onClick={() => setShowMenu(false)}
+                        className="relative rounded-md text-blue-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      >
+                        <span className="absolute -inset-2.5" />
+                        <span className="sr-only">Close panel</span>
+                        <XMarkIcon aria-hidden="true" className="size-6" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 space-y-4">
+                    {/* Overall Progress */}
+                    <div className="p-4 bg-gradient-to-r from-slate-100 to-slate-50 rounded-lg">
+                      <p className="text-sm font-semibold text-slate-900 mb-3">Overall Progress</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex-grow mr-3">
+                          <div className="w-full bg-slate-300 rounded-full h-3 overflow-hidden">
+                            <div
+                              className="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-300"
+                              style={{ width: `${overallProgress}%` }}
+                            />
+                          </div>
+                        </div>
+                        <span className="text-lg font-bold text-slate-900 min-w-fit">{overallProgress}%</span>
+                      </div>
+                      <p className="text-xs text-slate-600">{completedDays} of {workoutPlan.length} days completed</p>
+                    </div>
+
+                    {/* Day Selection */}
+                    <div className="border-t border-slate-200 pt-4 flex-1 flex flex-col">
+                      <p className="text-sm font-semibold text-slate-900 mb-3 uppercase">Select a Day</p>
+                      <div className="grid grid-cols-7 gap-2">
+                        {workoutPlan.map((day, idx) => {
+                          const isSelected = day.date === selectedDate;
+                          const dayNum = idx + 1;
+                          const allExercisesChecked = day.exercises.every((ex) =>
+                            checkedExercises.has(`${day.date}-${ex.id}`)
+                          );
+                          
+                          let bgColor = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
+                          if (isSelected) {
+                            bgColor = 'bg-blue-500 text-white shadow-md ring-2 ring-blue-300';
+                          } else if (allExercisesChecked) {
+                            bgColor = 'bg-green-500 text-white shadow-md';
+                          } else if (day.type === 'full') {
+                            bgColor = 'bg-blue-100 text-blue-900 hover:bg-blue-200';
+                          } else if (day.type === 'light') {
+                            bgColor = 'bg-green-100 text-green-900 hover:bg-green-200';
+                          } else if (day.type === 'rest') {
+                            bgColor = 'bg-slate-300 text-slate-700 hover:bg-slate-400';
+                          } else if (day.type === 'optional') {
+                            bgColor = 'bg-amber-100 text-amber-900 hover:bg-amber-200';
+                          }
+                          
+                          return (
+                            <button
+                              key={day.date}
+                              onClick={() => {
+                                setSelectedDate(day.date);
+                                setShowMenu(false);
+                              }}
+                              className={`p-2 rounded font-semibold transition-all text-xs ${bgColor}`}
+                              title={day.day}
+                            >
+                              {dayNum}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Day Legend */}
+                      <div className="border-t border-slate-200 mt-4 pt-4 text-xs text-slate-600">
+                        <p className="font-semibold text-slate-900 mb-2">Legend</p>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded bg-blue-100 border border-blue-300" />
+                            <span>Full Workout</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded bg-green-100 border border-green-300" />
+                            <span>Light Workout</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded bg-slate-300" />
+                            <span>Rest Day</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded bg-amber-100 border border-amber-300" />
+                            <span>Optional</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded bg-green-500" />
+                            <span>Completed</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Safety Notes - Moved to bottom */}
+                      <div className="mt-auto border-t border-slate-200 pt-4">
+                        <button
+                          onClick={() => setShowWarning(!showWarning)}
+                          className="w-full text-left px-3 py-2 rounded hover:bg-slate-100 transition-colors font-semibold text-sm text-red-700 flex items-center justify-between"
+                        >
+                          ⚠️ Safety Notes {showWarning ? '▼' : '▶'}
+                        </button>
+
+                        {showWarning && (
+                          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <ul className="text-sm text-red-800 space-y-2">
+                              <li>• No swelling the following day = appropriate load</li>
+                              <li>• Mild stiffness is normal</li>
+                              <li>• Stop if instability, sharp pain, or catching occurs</li>
+                              <li>• Consistency matters more than perfection</li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </DialogPanel>
+            </div>
+          </div>
+        </div>
+      </Dialog>
 
       {/* Progress Bar */}
       <div className="max-w-2xl mx-auto px-4 pt-4">
@@ -238,17 +423,6 @@ export default function WorkoutTracker() {
               </div>
             );
           })}
-        </div>
-
-        {/* Safety Notes */}
-        <div className="mt-8 bg-red-50 border-l-4 border-red-500 rounded-lg p-4">
-          <h3 className="font-bold text-red-900 mb-2">⚠️ Important Safety Notes</h3>
-          <ul className="text-sm text-red-800 space-y-1">
-            <li>• No swelling the following day = appropriate load</li>
-            <li>• Mild stiffness is normal</li>
-            <li>• Stop if instability, sharp pain, or catching occurs</li>
-            <li>• Consistency matters more than perfection</li>
-          </ul>
         </div>
       </div>
 
