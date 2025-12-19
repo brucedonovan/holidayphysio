@@ -33,7 +33,7 @@ export function Navigation({
     onTimerClick();
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handlePressStart = () => {
     if (isTimerActive) return;
     
     // Start long press timer
@@ -43,7 +43,7 @@ export function Navigation({
     }, 500);
   };
 
-  const handleMouseUp = (e: React.MouseEvent) => {
+  const handlePressEnd = () => {
     // Clear the long press timer if it hasn't fired yet
     if (pressTimer.current) {
       clearTimeout(pressTimer.current);
@@ -60,11 +60,11 @@ export function Navigation({
     <div className="fixed bottom-6 right-6 z-30">
       <button
         onClick={handleClick}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchStart={handleMouseDown}
-        onTouchEnd={handleMouseUp}
+        onMouseDown={handlePressStart}
+        onMouseUp={handlePressEnd}
+        onMouseLeave={handlePressEnd}
+        onTouchStart={handlePressStart}
+        onTouchEnd={handlePressEnd}
         type="button"
         className={`w-20 h-20 rounded-full font-semibold transition-all active:scale-95 select-none cursor-pointer shadow-lg hover:shadow-xl flex items-center justify-center ${
           isTimerActive
