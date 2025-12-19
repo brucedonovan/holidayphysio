@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import workoutPlan from '@/lib/workoutData';
+import { getTypeColor } from '@/app/lib/workoutUtils';
 
 interface MenuProps {
   selectedDate: string;
@@ -59,14 +60,14 @@ export function Menu({
             if (allExercisesChecked) {
               bgColor = 'bg-green-500 text-white shadow-md';
             } else if (day.type === 'full') {
-              bgColor = 'bg-blue-100 text-blue-900 hover:bg-blue-200';
+              bgColor = 'bg-blue-600 text-white hover:bg-blue-700';
             } else if (day.type === 'light') {
-              bgColor = 'bg-blue-50 text-blue-800 hover:bg-blue-100';
+              bgColor = 'bg-blue-300 text-blue-900 hover:bg-blue-400';
             } else if (day.type === 'rest') {
               bgColor =
-                'bg-white text-slate-400 border-2 border-slate-200 hover:bg-slate-50';
+                'bg-gray-200 text-gray-700 hover:bg-gray-300';
             } else if (day.type === 'optional') {
-              bgColor = 'bg-amber-100 text-amber-900 hover:bg-amber-200';
+              bgColor = 'bg-amber-200 text-amber-900 hover:bg-amber-300';
             }
 
             if (isSelected) {

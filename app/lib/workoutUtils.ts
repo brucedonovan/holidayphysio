@@ -1,15 +1,15 @@
 export function getTypeColor(type: string): string {
   switch (type) {
     case 'full':
-      return 'from-blue-500 to-blue-600';
+      return 'from-blue-600 to-blue-700';
     case 'light':
-      return 'from-green-500 to-green-600';
+      return 'from-blue-300 to-blue-400';
     case 'rest':
-      return 'from-slate-400 to-slate-500';
+      return 'from-gray-200 to-gray-300';
     case 'optional':
-      return 'from-amber-500 to-amber-600';
+      return 'from-amber-200 to-amber-300';
     default:
-      return 'from-gray-500 to-gray-600';
+      return 'from-gray-200 to-gray-300';
   }
 }
 

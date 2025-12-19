@@ -26,11 +26,21 @@ export function Header({
 }: HeaderProps) {
   const isTimer = timerActive && timerSeconds > 0;
   const timerProgressPercent = timerDuration > 0 ? (timerSeconds / timerDuration) * 100 : 0;
+  
+  // Determine text color based on workout type
+  let textColorClass = 'text-white';
+  if (day.type === 'light') {
+    textColorClass = 'text-blue-900';
+  } else if (day.type === 'rest') {
+    textColorClass = 'text-gray-700';
+  } else if (day.type === 'optional') {
+    textColorClass = 'text-amber-900';
+  }
 
   return (
     <div className="sticky top-0 z-20">
       <div
-        className={`bg-gradient-to-r ${getTypeColor(day.type)} text-white shadow-lg`}
+        className={`bg-gradient-to-r ${getTypeColor(day.type)} ${textColorClass} shadow-lg`}
       >
         <div className="max-w-2xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between mb-4">
@@ -61,9 +71,9 @@ export function Header({
       
       {/* Timer Progress Bar */}
       {timerActive && (
-        <div className="h-3 bg-white bg-opacity-20 overflow-hidden">
+        <div className="h-3 bg-slate-300 bg-opacity-30 overflow-hidden">
           <div
-            className="h-full bg-yellow-300 transition-all duration-100 ease-linear"
+            className="h-full bg-blue-500 transition-all duration-100 ease-linear"
             style={{ width: `${timerProgressPercent}%` }}
           />
         </div>
