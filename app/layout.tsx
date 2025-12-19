@@ -14,13 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ACL Holiday Physio",
-  description: "Track your ACL rehabilitation exercises during the holiday period. Offline-capable workout companion for your Apple device.",
+  title: "HolidayPhysio",
+  description: "Your holiday strength training companion. Track exercises, manage rest days, and stay consistent with guided workouts offline.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "ACL Holiday Physio",
+    title: "HolidayPhysio",
   },
   formatDetection: {
     telephone: false,

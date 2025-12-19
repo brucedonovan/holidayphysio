@@ -1,7 +1,7 @@
 {
-  "name": "ACL Holiday Physio",
-  "short_name": "Physio Tracker",
-  "description": "Track your ACL rehabilitation exercises during the holiday period. Offline-capable workout companion for your Apple device.",
+  "name": "HolidayPhysio",
+  "short_name": "HolidayPhysio",
+  "description": "Your holiday strength training companion. Track exercises, manage rest days, and stay consistent with guided workouts offline.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
