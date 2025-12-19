@@ -132,14 +132,18 @@ export default function WorkoutTracker() {
   };
 
   const handleFabMouseUp = () => {
+    const wasLongPress = longPressTimer.current === null;
     clearTimeout(longPressTimer.current || undefined);
     
     // If timer is active, stop it
     if (timerActive) {
       stopTimer();
+      return;
     }
-    // Short press when not active: start timer (only if menu isn't open)
-    else if (!showTimerMenu && !timerActive) {
+    
+    // Short press when not active: start timer with default duration
+    if (!wasLongPress) {
+      setShowTimerMenu(false); // Ensure menu is closed
       startTimer();
     }
   };
@@ -561,27 +565,36 @@ export default function WorkoutTracker() {
           </div>
         )}
 
-        {/* Timer Menu */}
+        {/* Timer Menu - Full Screen */}
         {showTimerMenu && !timerActive && (
-          <div className="bg-white rounded-lg shadow-xl p-3 space-y-2">
-            <button
-              onClick={() => startTimer(30)}
-              className="block w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded transition-colors"
-            >
-              30 seconds
-            </button>
-            <button
-              onClick={() => startTimer(45)}
-              className="block w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded transition-colors"
-            >
-              45 seconds
-            </button>
-            <button
-              onClick={() => startTimer(60)}
-              className="block w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded transition-colors"
-            >
-              1 minute
-            </button>
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-center justify-center" onClick={() => setShowTimerMenu(false)}>
+            <div className="bg-white rounded-xl shadow-2xl p-8 space-y-4 w-80">
+              <h2 className="text-2xl font-bold text-slate-900 text-center mb-6">Select Duration</h2>
+              <button
+                onClick={() => startTimer(30)}
+                className="w-full px-6 py-4 bg-blue-500 text-white text-lg font-semibold rounded-lg hover:bg-blue-600 transition-colors active:scale-95"
+              >
+                30 seconds
+              </button>
+              <button
+                onClick={() => startTimer(45)}
+                className="w-full px-6 py-4 bg-blue-500 text-white text-lg font-semibold rounded-lg hover:bg-blue-600 transition-colors active:scale-95"
+              >
+                45 seconds
+              </button>
+              <button
+                onClick={() => startTimer(60)}
+                className="w-full px-6 py-4 bg-blue-500 text-white text-lg font-semibold rounded-lg hover:bg-blue-600 transition-colors active:scale-95"
+              >
+                1 minute
+              </button>
+              <button
+                onClick={() => setShowTimerMenu(false)}
+                className="w-full px-6 py-3 bg-slate-300 text-slate-700 text-base font-semibold rounded-lg hover:bg-slate-400 transition-colors active:scale-95 mt-4"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         )}
 
