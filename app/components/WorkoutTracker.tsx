@@ -9,6 +9,7 @@ import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { ExerciseItem } from './ExerciseItem';
 import { Menu } from './Menu';
+import { SplashScreen } from './SplashScreen';
 import {
   formatTime,
   playNotificationSound,
@@ -31,6 +32,7 @@ export default function WorkoutTracker() {
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [timerDuration, setTimerDuration] = useState(30);
+  const [showSplash, setShowSplash] = useState(true);
 
   // Initialize on mount
   useEffect(() => {
@@ -206,8 +208,10 @@ export default function WorkoutTracker() {
   const isLast = currentIndex === workoutPlan.length - 1;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
+    <>
+      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+      <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+        {/* Header */}
       <Header
         day={currentDay}
         completionPercent={completionPercent}
@@ -292,5 +296,6 @@ export default function WorkoutTracker() {
         onTimerDurationSelect={handleTimerDurationSelect}
       />
     </div>
+    </>
   );
 }
