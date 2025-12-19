@@ -17,7 +17,7 @@ export function Menu({
   onDateChange,
 }: MenuProps) {
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 space-y-4">
+    <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 space-y-4 flex flex-col">
       {/* Overall Progress */}
       <div className="p-4 bg-gradient-to-r from-slate-100 to-slate-50 rounded-lg">
         <p className="text-sm font-semibold text-slate-900 mb-3">
@@ -46,10 +46,9 @@ export function Menu({
         <p className="text-sm font-semibold text-slate-900 mb-3 uppercase">
           Select a Day
         </p>
-        <div className="grid grid-cols-7 gap-2">
-          {workoutPlan.map((day, idx) => {
+        <div className="grid grid-cols-2 gap-2 overflow-y-auto">
+          {workoutPlan.map((day) => {
             const isSelected = day.date === selectedDate;
-            const dayNum = idx + 1;
             const allExercisesChecked = day.exercises.every((ex) =>
               checkedExercises.has(ex.id)
             );
@@ -81,40 +80,40 @@ export function Menu({
                 className={`p-2 rounded font-semibold transition-all text-xs ${bgColor} ${borderStyle}`}
                 title={day.day}
               >
-                {dayNum}
+                <div className="whitespace-normal">{day.date}</div>
               </button>
             );
           })}
         </div>
+      </div>
 
-        {/* Day Legend */}
-        <div className="border-t border-slate-200 mt-4 pt-4 text-xs text-slate-600">
-          <p className="font-semibold text-slate-900 mb-2">Legend</p>
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-slate-100 border-2 border-blue-500 ring-2 ring-blue-500 ring-offset-1" />
-              <span>Selected Day</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-blue-100 border border-blue-300" />
-              <span>Full Workout</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-blue-50 border border-blue-300" />
-              <span>Light Workout</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-white border border-slate-300" />
-              <span>Rest Day</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-amber-100 border border-amber-300" />
-              <span>Optional</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-green-500" />
-              <span>Completed</span>
-            </div>
+      {/* Day Legend */}
+      <div className="border-t border-slate-200 pt-4 text-xs text-slate-600">
+        <p className="font-semibold text-slate-900 mb-2">Legend</p>
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded bg-slate-100 border-2 border-blue-500 ring-2 ring-blue-500 ring-offset-1" />
+            <span>Selected Day</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded bg-blue-100 border border-blue-300" />
+            <span>Full Workout</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded bg-blue-50 border border-blue-300" />
+            <span>Light Workout</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded bg-white border border-slate-300" />
+            <span>Rest Day</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded bg-amber-100 border border-amber-300" />
+            <span>Optional</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded bg-green-500" />
+            <span>Completed</span>
           </div>
         </div>
       </div>
