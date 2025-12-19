@@ -24,10 +24,6 @@ export function Header({
   getTypeColor,
   getTypeLabel,
 }: HeaderProps) {
-  const progressPercent = timerActive && timerSeconds > 0 
-    ? (timerSeconds / timerDuration) * 100 
-    : completionPercent;
-  
   const isTimer = timerActive && timerSeconds > 0;
 
   return (
@@ -46,7 +42,7 @@ export function Header({
           </button>
         </div>
 
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between">
           <div>
             <p className="text-lg font-semibold">{getTypeLabel(day.type)}</p>
             {day.duration && <p className="text-sm opacity-90">{day.duration}</p>}
@@ -55,14 +51,6 @@ export function Header({
             <div className="text-3xl font-bold">{isTimer && formatTime ? formatTime(timerSeconds) : `${completionPercent}%`}</div>
             <p className="text-xs opacity-90">{isTimer ? 'Timer' : 'Today'}</p>
           </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="w-full bg-white bg-opacity-20 rounded-full h-2 overflow-hidden">
-          <div
-            className="bg-white h-full transition-all duration-300"
-            style={{ width: `${progressPercent}%` }}
-          />
         </div>
       </div>
     </div>

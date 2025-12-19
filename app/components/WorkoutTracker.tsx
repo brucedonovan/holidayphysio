@@ -97,22 +97,21 @@ export default function WorkoutTracker() {
 
   // Timer logic
   useEffect(() => {
-    if (!timerActive || timerSeconds <= 0) return;
+    if (!timerActive) return;
 
     const interval = setInterval(() => {
       setTimerSeconds((prev) => {
-        const next = prev - 1;
-        if (next <= 0) {
+        if (prev <= 1) {
           setTimerActive(false);
           playNotificationSound();
           return 0;
         }
-        return next;
+        return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timerActive, timerSeconds]);
+  }, [timerActive]);
 
   // Handlers
   const handleToggleExercise = (exerciseId: string) => {

@@ -13,14 +13,14 @@ export function Navigation({
         <button
           onClick={onTimerClick}
           type="button"
-          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center font-bold text-2xl transition-all active:scale-95 select-none cursor-pointer ${
+          className={`px-8 py-3 rounded-lg font-semibold text-base transition-all active:scale-95 select-none cursor-pointer ${
             isTimerActive
               ? 'bg-red-500 text-white hover:bg-red-600'
               : 'bg-blue-500 text-white hover:bg-blue-600'
           }`}
           aria-label={isTimerActive ? 'Stop timer' : 'Start timer'}
         >
-          {isTimerActive ? '⏹' : '⏱'}
+          {isTimerActive ? '⏹ Stop' : '⏱ Start Timer'}
         </button>
       </div>
     </div>
