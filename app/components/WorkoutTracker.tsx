@@ -35,8 +35,29 @@ export default function WorkoutTracker() {
   // Initialize on mount
   useEffect(() => {
     const today = getTodayDate();
-    const dateToUse =
-      workoutPlan.find((d) => d.date === today)?.date || workoutPlan[0].date;
+    let dateToUse = workoutPlan[0].date;
+    
+    // Try to find today's date
+    const todayInPlan = workoutPlan.find((d) => d.date === today);
+    if (todayInPlan) {
+      dateToUse = todayInPlan.date;
+    } else {
+      // Find the closest date
+      const todayDate = new Date(today);
+      let closestDay = workoutPlan[0];
+      let closestDiff = Math.abs(new Date(closestDay.date).getTime() - todayDate.getTime());
+      
+      for (const day of workoutPlan) {
+        const dayDate = new Date(day.date);
+        const diff = Math.abs(dayDate.getTime() - todayDate.getTime());
+        if (diff < closestDiff) {
+          closestDiff = diff;
+          closestDay = day;
+        }
+      }
+      dateToUse = closestDay.date;
+    }
+    
     setSelectedDate(dateToUse);
 
     const saved = localStorage.getItem('checkedExercises');
