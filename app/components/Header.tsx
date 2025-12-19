@@ -27,6 +27,21 @@ export function Header({
   const isTimer = timerActive && timerSeconds > 0;
   const timerProgressPercent = timerDuration > 0 ? (timerSeconds / timerDuration) * 100 : 0;
   
+  // Determine progress bar color based on remaining time
+  let progressBarColor = 'bg-green-500'; // Green for most of it
+  const tenSecondsPercent = (10 / timerDuration) * 100;
+  const thirdPercent = 33.33;
+  const twoThirdsPercent = 66.66;
+  
+  if (timerProgressPercent <= tenSecondsPercent) {
+    progressBarColor = 'bg-red-500'; // Red for last 10 seconds
+  } else if (timerProgressPercent <= thirdPercent) {
+    progressBarColor = 'bg-orange-500'; // Orange for lower third
+  } else if (timerProgressPercent <= twoThirdsPercent) {
+    progressBarColor = 'bg-yellow-500'; // Yellow for middle third
+  }
+  // Green for upper third (default)
+  
   // Determine text color based on workout type
   let textColorClass = 'text-white';
   if (day.type === 'light') {
@@ -73,7 +88,7 @@ export function Header({
       {timerActive && (
         <div className="h-3 bg-slate-300 bg-opacity-30 overflow-hidden">
           <div
-            className="h-full bg-blue-500 transition-all duration-100 ease-linear"
+            className={`h-full ${progressBarColor} transition-all duration-100 ease-linear`}
             style={{ width: `${timerProgressPercent}%` }}
           />
         </div>
