@@ -17,33 +17,33 @@ export function Menu({
   onDateChange,
 }: MenuProps) {
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 space-y-4 flex flex-col">
+    <div className="flex-1 overflow-y-auto px-3 py-3 sm:px-4 space-y-2 flex flex-col">
       {/* Overall Progress */}
-      <div className="p-4 bg-gradient-to-r from-slate-100 to-slate-50 rounded-lg">
-        <p className="text-sm font-semibold text-slate-900 mb-3">
+      <div className="p-3 bg-gradient-to-r from-slate-100 to-slate-50 rounded-lg">
+        <p className="text-xs font-semibold text-slate-900 mb-2">
           Overall Progress
         </p>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex-grow mr-3">
-            <div className="w-full bg-slate-300 rounded-full h-3 overflow-hidden">
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex-grow mr-2">
+            <div className="w-full bg-slate-300 rounded-full h-2 overflow-hidden">
               <div
                 className="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-300"
                 style={{ width: `${overallProgress}%` }}
               />
             </div>
           </div>
-          <span className="text-lg font-bold text-slate-900 min-w-fit">
+          <span className="text-sm font-bold text-slate-900 min-w-fit">
             {overallProgress}%
           </span>
         </div>
         <p className="text-xs text-slate-600">
-          {completedDays} of {workoutPlan.length} days completed
+          {completedDays} of {workoutPlan.length} days
         </p>
       </div>
 
       {/* Day Selection */}
-      <div className="border-t border-slate-200 pt-4 flex-1 flex flex-col">
-        <p className="text-sm font-semibold text-slate-900 mb-3 uppercase">
+      <div className="border-t border-slate-200 pt-2 flex-1 flex flex-col">
+        <p className="text-xs font-semibold text-slate-900 mb-2 uppercase">
           Select a Day
         </p>
         <div className="grid grid-cols-2 gap-2 overflow-y-auto">
@@ -77,7 +77,7 @@ export function Menu({
               <button
                 key={day.date}
                 onClick={() => onDateChange(day.date)}
-                className={`p-2 rounded font-semibold transition-all text-xs ${bgColor} ${borderStyle}`}
+                className={`p-1 rounded font-semibold transition-all text-xs ${bgColor} ${borderStyle}`}
                 title={day.day}
               >
                 <div className="whitespace-normal">{day.date}</div>
@@ -88,32 +88,32 @@ export function Menu({
       </div>
 
       {/* Day Legend */}
-      <div className="border-t border-slate-200 pt-4 text-xs text-slate-600">
-        <p className="font-semibold text-slate-900 mb-2">Legend</p>
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-slate-100 border-2 border-blue-500 ring-2 ring-blue-500 ring-offset-1" />
-            <span>Selected Day</span>
+      <div className="border-t border-slate-200 pt-2 text-xs text-slate-600">
+        <p className="font-semibold text-slate-900 mb-1">Legend</p>
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded bg-slate-100 border-2 border-blue-500 ring-2 ring-blue-500 ring-offset-1" />
+            <span className="text-xs">Selected</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-blue-100 border border-blue-300" />
-            <span>Full Workout</span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded bg-blue-100 border border-blue-300" />
+            <span className="text-xs">Full</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-blue-50 border border-blue-300" />
-            <span>Light Workout</span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded bg-blue-50 border border-blue-300" />
+            <span className="text-xs">Light</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-white border border-slate-300" />
-            <span>Rest Day</span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded bg-white border border-slate-300" />
+            <span className="text-xs">Rest</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-amber-100 border border-amber-300" />
-            <span>Optional</span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded bg-amber-100 border border-amber-300" />
+            <span className="text-xs">Optional</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-green-500" />
-            <span>Completed</span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded bg-green-500" />
+            <span className="text-xs">Done</span>
           </div>
         </div>
       </div>
