@@ -51,7 +51,7 @@ export function Navigation({
           }
         }}
         type="button"
-        className={`w-16 h-16 rounded-full font-semibold text-2xl transition-all active:scale-95 select-none cursor-pointer shadow-lg hover:shadow-xl flex items-center justify-center ${
+        className={`w-20 h-20 rounded-full font-semibold text-6xl transition-all active:scale-95 select-none cursor-pointer shadow-lg hover:shadow-xl flex items-center justify-center ${
           isTimerActive
             ? 'bg-red-500 text-white hover:bg-red-600'
             : 'bg-blue-500 text-white hover:bg-blue-600'
