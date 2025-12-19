@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { XMarkIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import workoutPlan from '@/lib/workoutData';
@@ -15,6 +15,11 @@ export default function WorkoutTracker() {
   const [showWarning, setShowWarning] = useState(false);
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedDays, setCompletedDays] = useState(0);
+  const [showTimerMenu, setShowTimerMenu] = useState(false);
+  const [timerSeconds, setTimerSeconds] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const [timerDuration, setTimerDuration] = useState(30);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize on mount
   useEffect(() => {
@@ -70,6 +75,80 @@ export default function WorkoutTracker() {
       setCompletionPercent(percent);
     }
   }, [selectedDate, checkedExercises]);
+
+  // Timer logic
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (timerActive && timerSeconds > 0) {
+      interval = setInterval(() => {
+        setTimerSeconds((prev) => {
+          if (prev <= 1) {
+            setTimerActive(false);
+            // Play notification sound
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+            
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    
+    return () => clearInterval(interval);
+  }, [timerActive, timerSeconds]);
+
+  const startTimer = (seconds?: number) => {
+    const duration = seconds || timerDuration;
+    setTimerSeconds(duration);
+    setTimerActive(true);
+    setShowTimerMenu(false);
+  };
+
+  const stopTimer = () => {
+    setTimerActive(false);
+    setTimerSeconds(0);
+  };
+
+  const handleFabMouseDown = () => {
+    if (timerActive) return;
+    longPressTimer.current = setTimeout(() => {
+      setShowTimerMenu(true);
+    }, 500); // 500ms long press
+  };
+
+  const handleFabMouseUp = () => {
+    clearTimeout(longPressTimer.current || undefined);
+    
+    // If timer is active, stop it
+    if (timerActive) {
+      stopTimer();
+    }
+    // Short press when not active: start timer (only if menu isn't open)
+    else if (!showTimerMenu && !timerActive) {
+      startTimer();
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const toggleExercise = (exerciseId: string) => {
     const updated = new Set(checkedExercises);
@@ -148,10 +227,11 @@ export default function WorkoutTracker() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-20">
-      {/* Header with Menu Button */}
+      {/* Header with Menu Button and Day Title */}
       <div className={`bg-gradient-to-r ${getTypeColor(currentDay.type)} text-white sticky top-0 z-20 shadow-lg`}>
         <div className="max-w-2xl mx-auto px-4 py-6">
-          <div className="flex items-start justify-end mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-3xl font-bold">{currentDay.day}</h1>
             <button
               onClick={() => setShowMenu(!showMenu)}
               className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-all"
@@ -160,8 +240,7 @@ export default function WorkoutTracker() {
             </button>
           </div>
 
-          <h1 className="text-3xl font-bold">{currentDay.day}</h1>
-          <div className="flex items-center justify-between mt-3">
+          <div className="flex items-center justify-between">
             <div>
               <p className="text-lg font-semibold">{getTypeLabel(currentDay.type)}</p>
               {currentDay.duration && <p className="text-sm opacity-90">{currentDay.duration}</p>}
@@ -170,6 +249,23 @@ export default function WorkoutTracker() {
               <div className="text-3xl font-bold">{completionPercent}%</div>
               <p className="text-xs opacity-90">Today</p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky Progress Bar */}
+      <div className="sticky top-24 z-19 bg-white shadow-md p-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="flex-1">
+              <div className="w-full bg-slate-300 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-300"
+                  style={{ width: `${completionPercent}%` }}
+                />
+              </div>
+            </div>
+            <span className="text-sm font-semibold text-slate-700 min-w-fit">{completionPercent}%</span>
           </div>
         </div>
       </div>
@@ -324,16 +420,6 @@ export default function WorkoutTracker() {
         </div>
       </Dialog>
 
-      {/* Progress Bar */}
-      <div className="max-w-2xl mx-auto px-4 pt-4">
-        <div className="w-full bg-slate-300 rounded-full h-2 overflow-hidden">
-          <div
-            className={`bg-gradient-to-r ${getTypeColor(currentDay.type)} h-full transition-all duration-300`}
-            style={{ width: `${completionPercent}%` }}
-          />
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Exercises List */}
@@ -462,6 +548,58 @@ export default function WorkoutTracker() {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* FAB Button with Timer */}
+      <div className="fixed bottom-6 right-6 flex flex-col items-end gap-3 z-40">
+        {/* Timer Display */}
+        {timerSeconds > 0 && (
+          <div className="bg-blue-500 text-white rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
+            <div className="text-center">
+              <div className="text-2xl font-bold">{formatTime(timerSeconds)}</div>
+            </div>
+          </div>
+        )}
+
+        {/* Timer Menu */}
+        {showTimerMenu && !timerActive && (
+          <div className="bg-white rounded-lg shadow-xl p-3 space-y-2">
+            <button
+              onClick={() => startTimer(30)}
+              className="block w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded transition-colors"
+            >
+              30 seconds
+            </button>
+            <button
+              onClick={() => startTimer(45)}
+              className="block w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded transition-colors"
+            >
+              45 seconds
+            </button>
+            <button
+              onClick={() => startTimer(60)}
+              className="block w-full px-4 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded transition-colors"
+            >
+              1 minute
+            </button>
+          </div>
+        )}
+
+        {/* FAB Main Button */}
+        <button
+          onMouseDown={handleFabMouseDown}
+          onMouseUp={handleFabMouseUp}
+          onMouseLeave={() => clearTimeout(longPressTimer.current || undefined)}
+          onTouchStart={handleFabMouseDown}
+          onTouchEnd={handleFabMouseUp}
+          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center font-bold text-lg transition-all active:scale-95 select-none ${
+            timerActive
+              ? 'bg-red-500 text-white hover:bg-red-600'
+              : 'bg-blue-500 text-white hover:bg-blue-600'
+          }`}
+        >
+          {timerActive ? '⏹' : '⏱'}
+        </button>
       </div>
     </div>
   );
