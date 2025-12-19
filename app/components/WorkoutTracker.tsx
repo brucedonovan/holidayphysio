@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { XMarkIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import workoutPlan from '@/lib/workoutData';
@@ -15,11 +15,9 @@ export default function WorkoutTracker() {
   const [showWarning, setShowWarning] = useState(false);
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedDays, setCompletedDays] = useState(0);
-  const [showTimerMenu, setShowTimerMenu] = useState(false);
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
-  const [timerDuration, setTimerDuration] = useState(30);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const TIMER_DURATION = 30;
 
   // Initialize on mount
   useEffect(() => {
@@ -112,11 +110,9 @@ export default function WorkoutTracker() {
     return () => clearInterval(interval);
   }, [timerActive, timerSeconds]);
 
-  const startTimer = (seconds?: number) => {
-    const duration = seconds || timerDuration;
-    setTimerSeconds(duration);
+  const startTimer = () => {
+    setTimerSeconds(TIMER_DURATION);
     setTimerActive(true);
-    setShowTimerMenu(false);
   };
 
   const stopTimer = () => {
@@ -124,26 +120,11 @@ export default function WorkoutTracker() {
     setTimerSeconds(0);
   };
 
-  const handleFabMouseDown = () => {
-    if (timerActive) return;
-    longPressTimer.current = setTimeout(() => {
-      setShowTimerMenu(true);
-    }, 500); // 500ms long press
-  };
-
-  const handleFabMouseUp = () => {
-    const wasLongPress = longPressTimer.current === null;
-    clearTimeout(longPressTimer.current || undefined);
-    
-    // If timer is active, stop it
+  const handleFabClick = () => {
+    console.log('FAB clicked, timerActive:', timerActive);
     if (timerActive) {
       stopTimer();
-      return;
-    }
-    
-    // Short press when not active: start timer with default duration
-    if (!wasLongPress) {
-      setShowTimerMenu(false); // Ensure menu is closed
+    } else {
       startTimer();
     }
   };
@@ -274,7 +255,24 @@ export default function WorkoutTracker() {
         </div>
       </div>
 
-      {/* Drawer Menu */}
+      {/* Timer Progress Bar */}
+      {timerActive && (
+        <div className="sticky top-24 z-19 bg-blue-50 shadow-md p-4">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center gap-3">
+              <div className="flex-1">
+                <div className="w-full bg-blue-200 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-full transition-all duration-300"
+                    style={{ width: `${(timerSeconds / TIMER_DURATION) * 100}%` }}
+                  />
+                </div>
+              </div>
+              <span className="text-sm font-bold text-blue-600 min-w-fit">{formatTime(timerSeconds)}</span>
+            </div>
+          </div>
+        </div>
+      )}
       <Dialog open={showMenu} onClose={setShowMenu} className="relative z-50">
         <div className="fixed inset-0" />
         
@@ -519,7 +517,7 @@ export default function WorkoutTracker() {
       </div>
 
       {/* Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 shadow-lg">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex gap-2">
             <button
@@ -555,57 +553,12 @@ export default function WorkoutTracker() {
       </div>
 
       {/* FAB Button with Timer */}
-      <div className="fixed bottom-6 right-6 flex flex-col items-end gap-3 z-40">
-        {/* Timer Display */}
-        {timerSeconds > 0 && (
-          <div className="bg-blue-500 text-white rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
-            <div className="text-center">
-              <div className="text-2xl font-bold">{formatTime(timerSeconds)}</div>
-            </div>
-          </div>
-        )}
-
-        {/* Timer Menu - Full Screen */}
-        {showTimerMenu && !timerActive && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-center justify-center" onClick={() => setShowTimerMenu(false)}>
-            <div className="bg-white rounded-xl shadow-2xl p-8 space-y-4 w-80">
-              <h2 className="text-2xl font-bold text-slate-900 text-center mb-6">Select Duration</h2>
-              <button
-                onClick={() => startTimer(30)}
-                className="w-full px-6 py-4 bg-blue-500 text-white text-lg font-semibold rounded-lg hover:bg-blue-600 transition-colors active:scale-95"
-              >
-                30 seconds
-              </button>
-              <button
-                onClick={() => startTimer(45)}
-                className="w-full px-6 py-4 bg-blue-500 text-white text-lg font-semibold rounded-lg hover:bg-blue-600 transition-colors active:scale-95"
-              >
-                45 seconds
-              </button>
-              <button
-                onClick={() => startTimer(60)}
-                className="w-full px-6 py-4 bg-blue-500 text-white text-lg font-semibold rounded-lg hover:bg-blue-600 transition-colors active:scale-95"
-              >
-                1 minute
-              </button>
-              <button
-                onClick={() => setShowTimerMenu(false)}
-                className="w-full px-6 py-3 bg-slate-300 text-slate-700 text-base font-semibold rounded-lg hover:bg-slate-400 transition-colors active:scale-95 mt-4"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-
+      <div className="fixed bottom-6 right-6 z-40 pointer-events-auto">
         {/* FAB Main Button */}
         <button
-          onMouseDown={handleFabMouseDown}
-          onMouseUp={handleFabMouseUp}
-          onMouseLeave={() => clearTimeout(longPressTimer.current || undefined)}
-          onTouchStart={handleFabMouseDown}
-          onTouchEnd={handleFabMouseUp}
-          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center font-bold text-lg transition-all active:scale-95 select-none ${
+          onClick={handleFabClick}
+          type="button"
+          className={`w-16 h-16 rounded-full shadow-lg flex items-center justify-center font-bold text-2xl transition-all active:scale-95 select-none cursor-pointer ${
             timerActive
               ? 'bg-red-500 text-white hover:bg-red-600'
               : 'bg-blue-500 text-white hover:bg-blue-600'
