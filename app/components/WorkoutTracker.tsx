@@ -193,7 +193,7 @@ export default function WorkoutTracker() {
       />
 
       {/* Scrollable Content Container */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto pb-24">
       {/* Menu Dialog */}
       <Dialog open={showMenu} onClose={setShowMenu} className="relative z-50">
         <div className="fixed inset-0" />
