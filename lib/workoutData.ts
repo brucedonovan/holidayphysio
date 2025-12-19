@@ -20,7 +20,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2025-12-21',
     day: 'Sunday, 21 Dec',
     type: 'full',
-    duration: '30–35 min',
+    duration: '45min-1hr',
     exercises: [
       { id: 'mobility-1', name: 'Mobility', duration: '5–8 min' },
       { id: 'toes-heels-1', name: 'Walk on toes / heels', sets: '2 rounds' },
@@ -37,7 +37,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2025-12-22',
     day: 'Monday, 22 Dec',
     type: 'light',
-    duration: '20–25 min',
+    duration: '30–40 min',
     exercises: [
       { id: 'mobility-2', name: 'Mobility', duration: '8 min' },
       { id: 'toes-heels-2', name: 'Walk on toes / heels', sets: '2 rounds' },
@@ -59,7 +59,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2025-12-24',
     day: 'Wednesday, 24 Dec',
     type: 'light',
-    duration: '15–20 min',
+    duration: '30–40 min',
     exercises: [
       { id: 'mobility-3', name: 'Mobility', duration: '10 min' },
       { id: 'toes-heels-3', name: 'Walk on toes / heels', sets: '2 rounds' },
@@ -80,7 +80,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2025-12-26',
     day: 'Friday, 26 Dec',
     type: 'full',
-    duration: '30 min',
+    duration: '45min-1hr',
     exercises: [
       { id: 'mobility-4', name: 'Mobility', duration: '5–8 min' },
       { id: 'toes-heels-4', name: 'Walk on toes / heels', sets: '2 rounds' },
@@ -98,7 +98,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2025-12-27',
     day: 'Saturday, 27 Dec',
     type: 'light',
-    duration: '20–25 min',
+    duration: '30–40 min',
     exercises: [
       { id: 'mobility-5', name: 'Mobility', duration: '8 min' },
       { id: 'toes-heels-5', name: 'Walk on toes / heels', sets: '2 rounds' },
@@ -120,7 +120,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2025-12-29',
     day: 'Monday, 29 Dec',
     type: 'full',
-    duration: '30–35 min',
+    duration: '45min-1hr',
     exercises: [
       { id: 'mobility-6', name: 'Mobility', duration: '5–8 min' },
       { id: 'toes-heels-6', name: 'Walk on toes / heels', sets: '2 rounds' },
@@ -137,7 +137,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2025-12-30',
     day: 'Tuesday, 30 Dec',
     type: 'full',
-    duration: '30–35 min',
+    duration: '45min-1hr',
     exercises: [
       { id: 'mobility-7', name: 'Mobility', duration: '5–8 min' },
       { id: 'toes-heels-7', name: 'Walk on toes / heels', sets: '2 rounds' },
@@ -155,7 +155,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2025-12-31',
     day: 'Wednesday, 31 Dec',
     type: 'optional',
-    duration: '15–20 min',
+    duration: '15–30 min',
     exercises: [
       { id: 'mobility-8', name: 'Mobility', duration: '10 min' },
       { id: 'toes-heels-8', name: 'Walk on toes / heels', sets: '2 rounds' },
@@ -175,7 +175,7 @@ const workoutPlan: WorkoutDay[] = [
     date: '2026-01-02',
     day: 'Friday, 2 Jan',
     type: 'full',
-    duration: '30–35 min',
+    duration: '45min-1hr',
     exercises: [
       { id: 'mobility-9', name: 'Mobility', duration: '5–8 min' },
       { id: 'toes-heels-9', name: 'Walk on toes / heels', sets: '2 rounds' },

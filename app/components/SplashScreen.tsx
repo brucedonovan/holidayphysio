@@ -31,8 +31,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           alt="HolidayPhysio" 
           className="w-32 h-32 mb-6 mx-auto rounded-3xl shadow-2xl"
         />
-        {/* <h1 className="text-5xl font-bold text-white mb-2">HolidayPhysio</h1>
-        <p className="text-xl text-blue-100">Your strength training companion</p> */}
+        <h1 className="text-5xl font-bold text-white mb-2">Xmas Physio</h1>
       </div>
       
       <div className="absolute bottom-12 flex flex-col items-center gap-3">

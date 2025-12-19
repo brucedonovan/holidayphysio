@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import workoutPlan from '@/lib/workoutData';
-import { getTypeColor } from '@/app/lib/workoutUtils';
+import { MoonIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
 
 interface MenuProps {
   selectedDate: string;
@@ -53,6 +52,11 @@ export function Menu({
             const allExercisesChecked = day.exercises.every((ex) =>
               checkedExercises.has(ex.id)
             );
+            const dayProgress = Math.round(
+              (day.exercises.filter((ex) => checkedExercises.has(ex.id)).length /
+                day.exercises.length) *
+                100
+            );
 
             let bgColor = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
             let borderStyle = '';
@@ -78,44 +82,37 @@ export function Menu({
               <button
                 key={day.date}
                 onClick={() => onDateChange(day.date)}
-                className={`p-1 rounded font-semibold transition-all text-xs ${bgColor} ${borderStyle}`}
+                className={`p-2 rounded font-semibold transition-all text-xs ${bgColor} ${borderStyle} flex items-center gap-2`}
                 title={day.day}
               >
-                <div className="whitespace-normal">{day.date}</div>
+                <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 bg-white bg-opacity-20 relative overflow-hidden">
+                  {allExercisesChecked ? (
+                    <CheckCircleIcon className="w-4 h-4" />
+                  ) : day.type === 'full' ? (
+                    <div className="w-full h-full rounded-full" style={{
+                      background: 'linear-gradient(to top, rgb(7, 89, 133) 75%, transparent 75%)'
+                    }} />
+                  ) : day.type === 'light' ? (
+                    <div className="w-full h-full rounded-full opacity-70 relative" style={{
+                      background: 'linear-gradient(to top, rgb(7, 89, 133) 50%, transparent 50%)'
+                    }} />
+                  ) : day.type === 'rest' ? (
+                    <MoonIcon className="w-4 h-4" />
+                  ) : day.type === 'optional' ? (
+                    <div className="w-full h-full rounded-full opacity-70 relative" style={{
+                      background: 'linear-gradient(to top, rgb(7, 89, 133) 25%, transparent 25%)'
+                    }} />
+                  ) : null}
+                </div>
+                <div className="flex flex-col items-start">
+                  <div className="text-xs leading-tight">{day.date}</div>
+                  {dayProgress > 0 && dayProgress < 100 && (
+                    <div className="text-xs">{dayProgress}% completed</div>
+                  )}
+                </div>
               </button>
             );
           })}
-        </div>
-      </div>
-
-      {/* Day Legend */}
-      <div className="border-t border-slate-200 pt-2 text-xs text-slate-600">
-        <p className="font-semibold text-slate-900 mb-1">Legend</p>
-        <div className="space-y-0.5">
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-slate-100 border-2 border-blue-500 ring-2 ring-blue-500 ring-offset-1" />
-            <span className="text-xs">Selected</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-blue-100 border border-blue-300" />
-            <span className="text-xs">Full</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-blue-50 border border-blue-300" />
-            <span className="text-xs">Light</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-white border border-slate-300" />
-            <span className="text-xs">Rest</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-amber-100 border border-amber-300" />
-            <span className="text-xs">Optional</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-green-500" />
-            <span className="text-xs">Done</span>
-          </div>
         </div>
       </div>
     </div>

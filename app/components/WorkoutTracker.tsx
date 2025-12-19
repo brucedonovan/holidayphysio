@@ -66,8 +66,8 @@ export default function WorkoutTracker() {
     if (saved) {
       try {
         setCheckedExercises(new Set(JSON.parse(saved)));
-      } catch (e) {
-        console.error('Failed to load saved state', e);
+      } catch {
+        // Failed to load saved state, using empty set
       }
     }
   }, []);

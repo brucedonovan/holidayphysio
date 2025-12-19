@@ -235,7 +235,7 @@ Edit `lib/workoutData.ts`:
   date: '2025-12-21',
   day: 'Sunday, 21 Dec',
   type: 'full',  // 'full' | 'light' | 'rest' | 'optional'
-  duration: '30–35 min',
+  duration: '45min-1hr',
   exercises: [
     { id: 'unique-1', name: 'Exercise Name', sets: '3', reps: '10' }
   ]

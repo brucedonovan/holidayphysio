@@ -16,9 +16,9 @@ export function getTypeColor(type: string): string {
 export function getTypeLabel(type: string): string {
   switch (type) {
     case 'full':
-      return 'Full Strength';
+      return 'Full Day';
     case 'light':
-      return 'Light Control';
+      return 'Light Day';
     case 'rest':
       return 'Rest Day';
     case 'optional':
